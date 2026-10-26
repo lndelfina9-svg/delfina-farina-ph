@@ -308,6 +308,27 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
   .contact h2,.contact .contact-main h2{font-size:clamp(52px,16vw,80px)}
 }
 
+/* scroll libre: nada obliga a recorrer todo */
+.hero,.feature,.statement{height:auto!important}
+.hero-stick,.feature-stick,.statement-stick{position:relative!important}
+.hero-stick{height:min(100vh,900px)}
+.feature-stick{height:min(88vh,860px)}
+.statement-stick{height:auto!important;padding-block:clamp(72px,9vw,120px)}
+#heroShot{transform:none!important;opacity:1!important;border-radius:0!important}
+#heroText{transform:none!important;opacity:1!important}
+.feature .shot{transform:none!important}
+.w{opacity:1!important}
+.hgal{height:auto!important}
+.hgal-stick{position:relative!important;height:auto!important;padding-block:clamp(72px,9vw,120px)}
+.hgal-track{transform:none!important;overflow-x:auto;scroll-snap-type:x proximity;padding-bottom:14px;scrollbar-width:thin;scroll-behavior:smooth}
+.card{scroll-snap-align:start}
+.gal-nav{display:flex;gap:8px}
+.navbtn{font:inherit;font-size:18px;background:transparent;color:var(--fg);border:1px solid var(--line);border-radius:999px;width:46px;height:46px;cursor:pointer}
+.navbtn:hover{border-color:var(--a1);color:var(--a1)}
+.me-nav{position:absolute;left:0;right:0;bottom:-58px;display:flex;justify-content:center;gap:10px;z-index:4}
+.stack{margin-bottom:64px}
+@media (max-width:720px){.gal-nav{display:none}.hgal-track{overflow:visible}.me-nav{bottom:-54px}}
+
 footer{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;padding-block:28px;border-top:1px solid var(--line);color:var(--muted)}
 
 @media (prefers-reduced-motion:reduce){
@@ -371,7 +392,7 @@ footer{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;paddin
     <div class="hgal-stick">
       <div class="wrap" style="display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;align-items:flex-end">
         <h2 class="big" style="font-size:clamp(44px,7vw,110px)">Más <span class="it">noches</span></h2>
-        <span class="mono hint-scroll" style="color:var(--muted)">Seguí bajando →</span>
+        <div class="gal-nav"><button class="navbtn" id="galPrev" type="button" aria-label="Ver anteriores">←</button><button class="navbtn" id="galNext" type="button" aria-label="Ver siguientes">→</button></div>
       </div>
       <div class="hgal-track" id="hTrack"></div>
     </div>
@@ -667,7 +688,7 @@ mg.innerHTML=ME.map(function(m,i){
     '<span class="ring" style="'+box+'"></span>'+
     '<button class="hot" type="button" aria-label="Encender la cámara" aria-pressed="false" style="'+box+'"></button>'+
     '<span class="cue" style="left:'+m.cx+'%;top:'+Math.max(4,m.cy-m.ry)+'%">Tocá la cámara</span></div><span class="pola-txt">delfinaf.ph</span></div></figure>';
-}).join('')+'<span class="count" id="meCount">01 / '+String(ME.length).padStart(2,'0')+'</span>';
+}).join('')+'<span class="count" id="meCount">01 / '+String(ME.length).padStart(2,'0')+'</span><div class="me-nav"><button class="navbtn" id="mePrev" type="button" aria-label="Foto anterior">←</button><button class="navbtn" id="meNext" type="button" aria-label="Foto siguiente">→</button></div>';
 var cams=mg.querySelectorAll('.cam'), meCount=document.getElementById('meCount'), curCam=0;
 function showCam(i){if(i===curCam)return;cams[curCam].classList.remove('cur','on');curCam=i;cams[i].classList.add('cur');meCount.textContent=String(i+1).padStart(2,'0')+' / '+String(ME.length).padStart(2,'0')}
 cams.forEach(function(f){
@@ -694,6 +715,18 @@ document.getElementById('lbNext').addEventListener('click',function(){lbShow(lbC
 lb.addEventListener('keydown',function(e){if(e.key==='Escape')lbClose();if(e.key==='ArrowRight')lbShow(lbCur+1);if(e.key==='ArrowLeft')lbShow(lbCur-1)});
 var tx=null;lbImg.addEventListener('touchstart',function(e){tx=e.touches[0].clientX},{passive:true});
 lbImg.addEventListener('touchend',function(e){if(tx===null)return;var dx=e.changedTouches[0].clientX-tx;if(Math.abs(dx)>40)lbShow(lbCur+(dx<0?1:-1));tx=null});
+
+
+// fotos de Delfi: pasan solas y con flechas
+var meTimer=null;
+function meGo(d){showCam((curCam+d+cams.length)%cams.length)}
+function meAuto(){clearInterval(meTimer);if(!reduce)meTimer=setInterval(function(){if(!mg.matches(':hover')&&!mg.querySelector('.cam.on'))meGo(1)},3500)}
+document.getElementById('mePrev').addEventListener('click',function(){meGo(-1);meAuto()});
+document.getElementById('meNext').addEventListener('click',function(){meGo(1);meAuto()});
+// galería: flechas
+function galGo(d){hTrack.scrollBy({left:d*Math.max(260,hTrack.clientWidth*0.8),behavior:'smooth'})}
+document.getElementById('galPrev').addEventListener('click',function(){galGo(-1)});
+document.getElementById('galNext').addEventListener('click',function(){galGo(1)});
 
 // reloj de Buenos Aires
 var clk=document.getElementById('clock');
@@ -728,33 +761,13 @@ var stmt=document.getElementById('sobre');
 var feats=document.querySelectorAll('[data-feature]');
 var hgal=document.getElementById('hgal'),hTrack=document.getElementById('hTrack');
 var isMob=matchMedia('(max-width:720px)');
-function sizeGal(){
-  if(reduce||isMob.matches){hgal.style.height='auto';return}
-  if(reduce){hgal.style.height='auto';hTrack.style.overflowX='auto';return}
-  var extra=Math.max(0,hTrack.scrollWidth-innerWidth);
-  hgal.style.height=(innerHeight+extra)+'px';
-}
-function frame(){
-  if(reduce)return;
-  var p=prog(hero);
-  var s=.42+.58*Math.min(1,p*1.4);
-  heroShot.style.transform='scale('+s+')';
-  heroShot.style.borderRadius=(1-Math.min(1,p*1.4))*28+'px';
-  heroShot.style.opacity=.55+.45*Math.min(1,p*1.6);
-  heroText.style.transform='translateY('+(-p*18)+'vh)';
-  heroText.style.opacity=Math.max(0,1-p*1.6);
-  var q=prog(stmt);var n=Math.round(q*1.15*ws.length);
-  ws.forEach(function(w,i){w.classList.toggle('on',i<n)});
-  showCam(Math.min(cams.length-1,Math.floor(q*cams.length*0.999)));
-  feats.forEach(function(f){var fp=prog(f);f.querySelector('.shot').style.transform='scale('+(1.15-.15*fp)+')'});
-  if(!isMob.matches){var gp=prog(hgal);var extra=Math.max(0,hTrack.scrollWidth-innerWidth);
-  hTrack.style.transform='translateX('+(-extra*gp)+'px)';}
-}
+function sizeGal(){hgal.style.height='auto'}
+function frame(){}
 var ticking=false;
 addEventListener('scroll',function(){if(!ticking){ticking=true;requestAnimationFrame(function(){frame();ticking=false})}},{passive:true});
 addEventListener('resize',function(){sizeGal();frame()});
 sizeGal();frame();
-if(reduce){ws.forEach(function(w){w.classList.add('on')})}
+ws.forEach(function(w){w.classList.add('on')});meAuto();
 </script>
 
 </body>
