@@ -329,6 +329,11 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .stack{margin-bottom:64px}
 @media (max-width:720px){.gal-nav{display:none}.hgal-track{overflow:visible}.me-nav{bottom:-54px}}
 
+/* fotos verticales en las escenas grandes: enteras y nítidas, con fondo difuminado */
+.feature .shot img.bgfill{filter:blur(38px) brightness(.45) saturate(1.3)!important;transform:scale(1.15)}
+.feature .shot img.fgfit{object-fit:contain;filter:none!important}
+@media (max-width:720px){.feature .shot img.fgfit{object-fit:cover}}
+
 footer{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;padding-block:28px;border-top:1px solid var(--line);color:var(--muted)}
 
 @media (prefers-reduced-motion:reduce){
@@ -375,7 +380,7 @@ footer{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;paddin
 
   <section class="feature" id="trabajos" data-feature="0">
     <div class="feature-stick">
-      <div class="shot" style="--x:70%;--y:15%;--x2:25%;--y2:80%"><img src="img/f_tym_cover.jpg" alt="La T y La M con Grupo Frontera en el escenario" style="object-position:50% 52%"></div>
+      <div class="shot" style="--x:70%;--y:15%;--x2:25%;--y2:80%"><img class="bgfill" src="img/f_tym_hd.jpg" alt=""><img class="fgfit" src="img/f_tym_hd.jpg" alt="La T y La M con Grupo Frontera en el escenario"></div>
       <div class="feature-cap wrap">
         <h2 class="big">La T y la M <span class="it">+ Grupo Frontera</span></h2>
         <a class="btn solid" href="#tym" data-album="tym">Ver álbum · 19 fotos</a>
@@ -400,10 +405,10 @@ footer{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;paddin
 
   <section class="feature" data-feature="1">
     <div class="feature-stick">
-      <div class="shot" style="--x:30%;--y:25%;--x2:80%;--y2:85%;--c1:var(--a2);--c2:var(--a1)"><img src="img/ig_vicoc.jpg" alt="Vico C en el Gran Rex" style="object-position:50% 40%"></div>
+      <div class="shot" style="--x:30%;--y:25%;--x2:80%;--y2:85%;--c1:var(--a2);--c2:var(--a1)"><img class="bgfill" src="img/ig_roxette.jpg" alt=""><img class="fgfit" src="img/ig_roxette.jpg" alt="Roxette en el Movistar Arena"></div>
       <div class="feature-cap wrap">
-        <h2 class="big">Vico <span class="it">C</span></h2>
-        <span class="mono">Teatro Gran Rex</span>
+        <h2 class="big">Rox<span class="it">ette</span></h2>
+        <span class="mono">Movistar Arena</span>
       </div>
     </div>
   </section>
@@ -578,7 +583,7 @@ var GAL = [
   {t:'Duki', v:'Movistar Arena', img:'img/ig_duki.jpg'},
   {t:'Fito Páez', v:'Movistar Arena', img:'img/ig_fitopaez.jpg'},
   {t:'Harry Styles', v:'Estadio do Morumbi', img:'img/ig_harrystyles.jpg'},
-  {t:'Roxette', v:'Movistar Arena', img:'img/ig_roxette.jpg'},
+  {t:'Vico C', v:'Teatro Gran Rex', img:'img/ig_vicoc.jpg'},
   {t:'Bandalos Chinos', v:'Movistar Arena', img:'img/ig_bandaloschinos.jpg'},
   {t:'El Kuelgue', v:'Movistar Arena', img:'img/ig_elkuelgue.jpg'},
   {t:'YSY A', v:'C Art Media', img:'img/ig_ysya.jpg'},
