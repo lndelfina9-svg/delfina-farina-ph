@@ -35,8 +35,9 @@ img{display:block}
 .label{font-size:12px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
 .it{font-family:var(--serif);font-style:italic;font-weight:400;letter-spacing:-.01em;color:var(--bordo)}
 :root{--bordo:#6B1420}
-.it,.hero h1 .it,.statement .it,.contact h2 .it,.it.acc{color:var(--bordo)}
-.brand span{color:var(--bordo)}
+/* destacados: banda bordó que no pisa las otras líneas */
+.it,.hero h1 .it,.statement .it,.contact h2 .it,.it.acc{color:#F3ECE6!important;background:linear-gradient(var(--bordo),var(--bordo)) 0 60%/100% .78em no-repeat;padding:0 .1em;-webkit-box-decoration-break:clone;box-decoration-break:clone}
+.brand span{color:#F3ECE6!important;background:var(--bordo);padding:0 .25em;border-radius:3px}
 .it.acc{color:var(--accent)}
 h1,h2,h3{margin:0;font-weight:500;letter-spacing:-.03em;text-wrap:balance}
 .sec{padding-block:clamp(88px,11vw,168px)}
